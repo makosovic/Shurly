@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Shurly.Core.Enums;
 using Shurly.Core.Models;
 
@@ -11,6 +10,6 @@ namespace Shurly.Core.Persistance
         void LogRedirect(string shortUrl);
         IShurly Register(string url, string accountId);
         IShurly Register(string url, string accountId, RedirectType redirectType);
-        IEnumerable<KeyValuePair<string, int>>  GetStatistics(string accountId);
+        Dictionary<string, int> GetStatistics(string accountId);
     }
 }

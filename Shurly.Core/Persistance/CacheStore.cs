@@ -3,19 +3,26 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Principal;
+using System.Web;
+using System.Web.Http.Routing;
 using Shurly.Core.Enums;
 using Shurly.Core.Models;
 using Shurly.Core.Security;
 
 namespace Shurly.Core.Persistance
 {
-    public class CacheStore : IPersistanceStore
+    public class CacheStore : IAccountStore, IShurlyStore
     {
-        private static readonly ConcurrentDictionary<string, IAccount> AccountCache = new ConcurrentDictionary<string, IAccount>();
-        private static readonly ConcurrentDictionary<string, IShurly> ShurlyCache = new ConcurrentDictionary<string, IShurly>();
-        private static readonly ConcurrentDictionary<string, Collection<string>> ShurlyOwnershipCache = new ConcurrentDictionary<string, Collection<string>>();
+        private const int Seed = 10000;
+
+        private static readonly ConcurrentDictionary<string, IAccount> AccountCache =
+            new ConcurrentDictionary<string, IAccount>();
+
+        private static readonly ConcurrentDictionary<string, IShurly> ShurlyCache =
+            new ConcurrentDictionary<string, IShurly>();
+
+        private static readonly ConcurrentDictionary<string, Collection<string>> ShurlyOwnershipCache =
+            new ConcurrentDictionary<string, Collection<string>>();
 
         #region account store
 
@@ -27,10 +34,7 @@ namespace Shurly.Core.Persistance
             {
                 return account;
             }
-            else
-            {
-                throw new ApplicationException("Account doesnt exists.");
-            }
+            throw new ApplicationException("Account doesnt exists.");
         }
 
         public IAccount CreateAccount(string accountId, string password)
@@ -40,10 +44,7 @@ namespace Shurly.Core.Persistance
             {
                 return account;
             }
-            else
-            {
-                throw new ApplicationException(string.Format("Account with Id {0} already exists.", accountId));
-            }
+            throw new ApplicationException(string.Format("Account with Id {0} already exists.", accountId));
         }
 
         #endregion
@@ -52,23 +53,20 @@ namespace Shurly.Core.Persistance
 
         public IShurly Register(string url, string accountId)
         {
-            int nextId = this.GetNextShurlyId();
+            var nextId = GetNextShurlyId();
             IShurly shurly = new Models.Shurly(nextId, url, accountId);
-            
-            if(ShurlyCache.TryAdd(shurly.ShortUrl, shurly))
+
+            if (ShurlyCache.TryAdd(shurly.ShortUrl, shurly))
             {
                 RegisterOwnership(shurly.ShortUrl, shurly.OwnerId);
                 return shurly;
             }
-            else
-            {
-                throw new ApplicationException("There has been an error inserting new Shurly.");
-            }
+            throw new ApplicationException("There has been an error inserting new Shurly.");
         }
 
         public IShurly Register(string url, string accountId, RedirectType redirectType)
         {
-            int nextId = this.GetNextShurlyId();
+            var nextId = GetNextShurlyId();
             IShurly shurly = new Models.Shurly(nextId, url, accountId, redirectType);
 
             if (ShurlyCache.TryAdd(shurly.ShortUrl, shurly))
@@ -76,10 +74,7 @@ namespace Shurly.Core.Persistance
                 RegisterOwnership(shurly.ShortUrl, shurly.OwnerId);
                 return shurly;
             }
-            else
-            {
-                throw new ApplicationException("There has been an error inserting new Shurly.");
-            }
+            throw new ApplicationException("There has been an error inserting new Shurly.");
         }
 
         public IShurly GetShurlyByShortUrl(string shortUrl)
@@ -90,10 +85,7 @@ namespace Shurly.Core.Persistance
             {
                 return shurly;
             }
-            else
-            {
-                throw new ApplicationException(string.Format("Url '{0}' is not registered.", shortUrl));
-            }
+            throw new ApplicationException(string.Format("Url '{0}' is not registered.", shortUrl));
         }
 
         public void LogRedirect(string shortUrl)
@@ -107,10 +99,10 @@ namespace Shurly.Core.Persistance
             }
         }
 
-        public IEnumerable<KeyValuePair<string, int>> GetStatistics(string accountId)
+        public Dictionary<string, int> GetStatistics(string accountId)
         {
             Collection<string> shortUrls;
-            Collection<IShurly> shurlies = new Collection<IShurly>();
+            var shurlies = new Collection<IShurly>();
 
             if (ShurlyOwnershipCache.TryGetValue(accountId, out shortUrls))
             {
@@ -128,19 +120,18 @@ namespace Shurly.Core.Persistance
                     }
                 }
 
-                return shurlies.Select(x => new KeyValuePair<string, int>(x.ShortUrl, x.Visits));
+                var urlHelper = new UrlHelper();
+
+                return shurlies.ToDictionary(x => string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, x.ShortUrl), y => y.Visits);
             }
-            else
-            {
-                throw new ApplicationException("Account doesnt exists.");
-            }
+            throw new ApplicationException("Account doesnt exists.");
         }
 
         #region private methods
 
         private int GetNextShurlyId()
         {
-            return ShurlyCache.Count + 1;
+            return Seed + ShurlyCache.Count + 1;
         }
 
         private void RegisterOwnership(string shortUrl, string accountId)
@@ -164,6 +155,5 @@ namespace Shurly.Core.Persistance
         #endregion
 
         #endregion
-
     }
 }

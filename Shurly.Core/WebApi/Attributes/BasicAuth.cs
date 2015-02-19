@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
+using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Shurly.Core.Security;
@@ -31,6 +32,7 @@ namespace Shurly.Core.WebApi.Attributes
                     {
                         IPrincipal currentPrincipal = new GenericPrincipal(new GenericIdentity(accountId), null);
                         Thread.CurrentPrincipal = currentPrincipal;
+                        HttpContext.Current.User = currentPrincipal;
                         return;
                     }
                 }

@@ -1,5 +1,4 @@
-﻿
-namespace Shurly.Core.Security
+﻿namespace Shurly.Core.Security
 {
     public class Account : IAccount
     {
