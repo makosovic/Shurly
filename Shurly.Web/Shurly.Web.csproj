@@ -192,6 +192,8 @@
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-cookies.min.js.map" />
+    <None Include="Properties\PublishProfiles\shurly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\shurly - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\bootstrap.js" />

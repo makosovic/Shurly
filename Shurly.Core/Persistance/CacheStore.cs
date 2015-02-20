@@ -122,7 +122,7 @@ namespace Shurly.Core.Persistance
 
                 var urlHelper = new UrlHelper();
 
-                return shurlies.ToDictionary(x => string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, x.ShortUrl), y => y.Visits);
+                return shurlies.ToDictionary(x => x.Url, y => y.Visits);
             }
             throw new ApplicationException("Account doesnt exists.");
         }
