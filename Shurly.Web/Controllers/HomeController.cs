@@ -14,5 +14,12 @@ namespace Shurly.Web.Controllers
 
             return View();
         }
+
+        public ActionResult Help()
+        {
+            ViewBag.Title = "Home Page";
+
+            return View();
+        }
     }
 }

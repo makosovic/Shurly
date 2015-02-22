@@ -85,7 +85,7 @@ namespace Shurly.Core.Persistance
             {
                 return shurly;
             }
-            throw new ApplicationException(string.Format("Url '{0}' is not registered.", shortUrl));
+            throw new ApplicationException(string.Format("Shurly '{0}' is not registered.", shortUrl));
         }
 
         public void LogRedirect(string shortUrl)
