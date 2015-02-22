@@ -15,7 +15,7 @@ namespace Shurly.Web.Controllers
     {
         [HttpPost]
         // POST account
-        public IHttpActionResult Account([FromBody] IAccountRequestBody requestBody)
+        public IHttpActionResult Account([FromBody] AccountRequestBody requestBody)
         {
             if (requestBody == null || string.IsNullOrEmpty(requestBody.AccountId))
             {
@@ -44,9 +44,8 @@ namespace Shurly.Web.Controllers
 
         [HttpPost]
         [BasicAuth]
-        [InjectAccountId]
         // POST register
-        public IHttpActionResult Register(string accountId, [FromBody]IRegisterRequestBody requestBody)
+        public IHttpActionResult Register([FromBody] RegisterRequestBody requestBody)
         {
             if (requestBody == null || string.IsNullOrEmpty(requestBody.Url))
             {
@@ -61,11 +60,11 @@ namespace Shurly.Web.Controllers
 
                 if (requestBody.RedirectType == null)
                 {
-                    shurly = shurlyStore.Register(requestBody.Url, accountId);
+                    shurly = shurlyStore.Register(requestBody.Url, User.Identity.Name);
                 }
                 else
                 {
-                    shurly = shurlyStore.Register(requestBody.Url, accountId,
+                    shurly = shurlyStore.Register(requestBody.Url, User.Identity.Name,
                         (RedirectType) requestBody.RedirectType);
                 }
 

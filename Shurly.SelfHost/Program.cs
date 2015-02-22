@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Owin.Hosting;
 
 namespace Shurly.SelfHost
@@ -21,9 +17,17 @@ namespace Shurly.SelfHost
                 HttpClient client = new HttpClient();
 
                 Console.WriteLine("Welcome to self hosted short url repository.");
-                Console.WriteLine("You can find it in your browser by navigating to: '{0}'.", baseAddress);
-                Console.WriteLine("To stop the app, enter 'exit'.");
-                Console.WriteLine("Enjoy.");
+                Console.WriteLine();
+                Console.WriteLine("   You can find it in your browser by navigating to:");
+                Console.WriteLine(" > {0}", baseAddress);
+                Console.WriteLine();
+                Console.WriteLine("   If you need some assistance, help page is located at:");
+                Console.WriteLine(" > {0}help", baseAddress);
+                Console.WriteLine();
+                Console.WriteLine("   To stop the client, enter 'exit'.");
+                Console.WriteLine();
+                Console.WriteLine("   Enjoy.");
+                Console.WriteLine();
 
                 string input;
                 do

@@ -56,9 +56,8 @@
     <Compile Include="Helpers\Characters.cs" />
     <Compile Include="Helpers\CustomNumberBase.cs" />
     <Compile Include="Enums\RedirectType.cs" />
-    <Compile Include="WebApi\Attributes\InjectAccountId.cs" />
-    <Compile Include="WebApi\Models\IAccountRequestBody.cs" />
-    <Compile Include="WebApi\Models\IRegisterRequestBody.cs" />
+    <Compile Include="WebApi\Models\AccountRequestBody.cs" />
+    <Compile Include="WebApi\Models\RegisterRequestBody.cs" />
     <Compile Include="WebApi\Models\RegisterResponseBody.cs" />
     <Compile Include="WebApi\Models\AccountResponseBody.cs" />
     <Compile Include="Models\IShurly.cs" />

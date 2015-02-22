@@ -1,4 +1,6 @@
-﻿using System.Web.Http.Results;
+﻿using System.Security.Principal;
+using System.Threading;
+using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Shurly.Core.WebApi.Models;
@@ -13,11 +15,17 @@ namespace Shurly.Tests.ShurlyController
     {
         public RegisterActionShould()
         {
-            _shurlyController = new Web.Controllers.ShurlyController();
+            var mockUser = new Mock<IPrincipal>();
+            var mockIdentity = new Mock<IIdentity>();
+            mockUser.Setup(x => x.Identity).Returns(mockIdentity.Object);
+            mockIdentity.Setup(x => x.Name).Returns("Shurley");
+            Thread.CurrentPrincipal = mockUser.Object;
+
+            _shurlyController = new SelfHost.Controllers.ShurlyController();
         }
 
         private TestContext _testContextInstance;
-        private Web.Controllers.ShurlyController _shurlyController;
+        private SelfHost.Controllers.ShurlyController _shurlyController;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -60,11 +68,10 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnBadRequestIfUrlIsNullOrEmpty()
         {
-            var mockAccountId = "TestAccountId";
-            var mockRequestBody = new Mock<IRegisterRequestBody>();
+            var mockRequestBody = new Mock<RegisterRequestBody>();
             mockRequestBody.Setup(x => x.Url).Returns((string)null);
 
-            var httpActionResult = _shurlyController.Register(mockAccountId, mockRequestBody.Object);
+            var httpActionResult = _shurlyController.Register(mockRequestBody.Object);
 
             Assert.IsInstanceOfType(httpActionResult, typeof(BadRequestErrorMessageResult));
         }
@@ -72,11 +79,10 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnOkIfUrlRegistrationIsSuccessful()
         {
-            var mockAccountId = "TestAccountId";
-            var mockRequestBody = new Mock<IRegisterRequestBody>();
+            var mockRequestBody = new Mock<RegisterRequestBody>();
             mockRequestBody.Setup(x => x.Url).Returns("http://facebook.com");
 
-            var httpActionResult = _shurlyController.Register(mockAccountId, mockRequestBody.Object);
+            var httpActionResult = _shurlyController.Register(mockRequestBody.Object);
 
             Assert.IsInstanceOfType(httpActionResult, typeof(OkNegotiatedContentResult<RegisterResponseBody>));
         }
@@ -84,11 +90,10 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnShortUrlIfRegistrationWasSuccessful()
         {
-            var mockAccountId = "TestAccountId";
-            var mockRequestBody = new Mock<IRegisterRequestBody>();
+            var mockRequestBody = new Mock<RegisterRequestBody>();
             mockRequestBody.Setup(x => x.Url).Returns("http://facebook.com");
 
-            var httpActionResult = _shurlyController.Register(mockAccountId, mockRequestBody.Object);
+            var httpActionResult = _shurlyController.Register(mockRequestBody.Object);
 
             OkNegotiatedContentResult<RegisterResponseBody> negResult = httpActionResult as OkNegotiatedContentResult<RegisterResponseBody>;
             Assert.IsNotNull(negResult);

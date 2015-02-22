@@ -48,6 +48,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
@@ -77,9 +78,9 @@
       <Project>{a98e846a-20c2-4a84-abe6-60e796e0580a}</Project>
       <Name>Shurly.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Shurly.Web\Shurly.Web.csproj">
-      <Project>{92fb7f0c-67cc-481f-8f5f-e749531fa9b0}</Project>
-      <Name>Shurly.Web</Name>
+    <ProjectReference Include="..\Shurly.SelfHost\Shurly.SelfHost.csproj">
+      <Project>{816f9d03-6709-4fea-86b2-dde87b09ae0e}</Project>
+      <Name>Shurly.SelfHost</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

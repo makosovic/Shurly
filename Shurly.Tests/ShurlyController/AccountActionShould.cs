@@ -13,11 +13,11 @@ namespace Shurly.Tests.ShurlyController
     {
         public AccountActionShould()
         {
-            _shurlyController = new Web.Controllers.ShurlyController();
+            _shurlyController = new SelfHost.Controllers.ShurlyController();
         }
 
         private TestContext _testContextInstance;
-        private Web.Controllers.ShurlyController _shurlyController;
+        private SelfHost.Controllers.ShurlyController _shurlyController;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -60,7 +60,7 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnBadRequestIfAccountIdIsNullOrEmpty()
         {
-            var mockRequestBody = new Mock<IAccountRequestBody>();
+            var mockRequestBody = new Mock<AccountRequestBody>();
             mockRequestBody.Setup(x => x.AccountId).Returns((string)null);
 
             var httpActionResult = _shurlyController.Account(mockRequestBody.Object);
@@ -71,7 +71,7 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnOkIfRegistrationIsSuccessful()
         {
-            var mockRequestBody = new Mock<IAccountRequestBody>();
+            var mockRequestBody = new Mock<AccountRequestBody>();
             mockRequestBody.Setup(x => x.AccountId).Returns("TestAccountId1");
 
             var httpActionResult = _shurlyController.Account(mockRequestBody.Object);
@@ -82,7 +82,7 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnOkIfRegistrationFails()
         {
-            var mockRequestBody = new Mock<IAccountRequestBody>();
+            var mockRequestBody = new Mock<AccountRequestBody>();
             mockRequestBody.Setup(x => x.AccountId).Returns("TestAccountId2");
 
             // first call so we are sure there is duplicate and action will fail
@@ -95,7 +95,7 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnSuccessFalseIfRegistrationFails()
         {
-            var mockRequestBody = new Mock<IAccountRequestBody>();
+            var mockRequestBody = new Mock<AccountRequestBody>();
             mockRequestBody.Setup(x => x.AccountId).Returns("TestAccountId3");
 
             // first call so we are sure there is duplicate and action will fail
@@ -110,7 +110,7 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void NotReturnPasswordIfRegistrationFails()
         {
-            var mockRequestBody = new Mock<IAccountRequestBody>();
+            var mockRequestBody = new Mock<AccountRequestBody>();
             mockRequestBody.Setup(x => x.AccountId).Returns("TestAccountId4");
 
             // first call so we are sure there is duplicate and action will fail
@@ -125,7 +125,7 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnPasswordIfRegistrationWasSuccessful()
         {
-            var mockRequestBody = new Mock<IAccountRequestBody>();
+            var mockRequestBody = new Mock<AccountRequestBody>();
             mockRequestBody.Setup(x => x.AccountId).Returns("TestAccountId5");
 
             var httpActionResult = _shurlyController.Account(mockRequestBody.Object);
@@ -138,7 +138,7 @@ namespace Shurly.Tests.ShurlyController
         [TestMethod]
         public void ReturnPasswordWith8LengthIfRegistrationWasSuccessful()
         {
-            var mockRequestBody = new Mock<IAccountRequestBody>();
+            var mockRequestBody = new Mock<AccountRequestBody>();
             mockRequestBody.Setup(x => x.AccountId).Returns("TestAccountId6");
 
             var httpActionResult = _shurlyController.Account(mockRequestBody.Object);

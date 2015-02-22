@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Web.Http;
 using Shurly.Core.Enums;
 using Shurly.Core.Helpers;
@@ -8,13 +9,13 @@ using Shurly.Core.Security;
 using Shurly.Core.WebApi.Attributes;
 using Shurly.Core.WebApi.Models;
 
-namespace Shurly.SelfHost
+namespace Shurly.SelfHost.Controllers
 {
     public class ShurlyController : ApiController
     {
         [HttpPost]
         // POST account
-        public IHttpActionResult Account([FromBody] IAccountRequestBody requestBody)
+        public IHttpActionResult Account([FromBody] AccountRequestBody requestBody)
         {
             if (requestBody == null || string.IsNullOrEmpty(requestBody.AccountId))
             {
@@ -43,9 +44,8 @@ namespace Shurly.SelfHost
 
         [HttpPost]
         [BasicAuth]
-        [InjectAccountId]
         // POST register
-        public IHttpActionResult Register(string accountId, [FromBody]IRegisterRequestBody requestBody)
+        public IHttpActionResult Register([FromBody]RegisterRequestBody requestBody)
         {
             if (requestBody == null || string.IsNullOrEmpty(requestBody.Url))
             {
@@ -60,11 +60,11 @@ namespace Shurly.SelfHost
 
                 if (requestBody.RedirectType == null)
                 {
-                    shurly = shurlyStore.Register(requestBody.Url, accountId);
+                    shurly = shurlyStore.Register(requestBody.Url, Thread.CurrentPrincipal.Identity.Name);
                 }
                 else
                 {
-                    shurly = shurlyStore.Register(requestBody.Url, accountId,
+                    shurly = shurlyStore.Register(requestBody.Url, Thread.CurrentPrincipal.Identity.Name,
                         (RedirectType)requestBody.RedirectType);
                 }
 

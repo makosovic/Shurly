@@ -19,6 +19,12 @@ namespace Shurly.SelfHost
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
+                name: "Help",
+                routeTemplate: "help",
+                defaults: new { controller = "Home", action = "Help" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "Account",
                 routeTemplate: "account",
                 defaults: new { controller = "Shurly", action = "Account", id = RouteParameter.Optional }
@@ -45,7 +51,7 @@ namespace Shurly.SelfHost
             config.Routes.MapHttpRoute(
                 name: "Home",
                 routeTemplate: "",
-                defaults: new { controller = "Home", action = "Get" }
+                defaults: new { controller = "Home", action = "Index" }
             );
 
             appBuilder.UseWebApi(config);

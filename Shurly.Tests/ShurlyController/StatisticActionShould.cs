@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Security.Principal;
+using System.Threading;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -14,11 +16,17 @@ namespace Shurly.Tests.ShurlyController
     {
         public StatisticActionShould()
         {
-            _shurlyController = new Web.Controllers.ShurlyController();
+            var mockUser = new Mock<IPrincipal>();
+            var mockIdentity = new Mock<IIdentity>();
+            mockUser.Setup(x => x.Identity).Returns(mockIdentity.Object);
+            mockIdentity.Setup(x => x.Name).Returns("TestAccountId");
+            Thread.CurrentPrincipal = mockUser.Object;
+
+            _shurlyController = new SelfHost.Controllers.ShurlyController();
         }
 
         private TestContext _testContextInstance;
-        private Web.Controllers.ShurlyController _shurlyController;
+        private SelfHost.Controllers.ShurlyController _shurlyController;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -63,14 +71,14 @@ namespace Shurly.Tests.ShurlyController
         {
             var mockAccountId = "TestAccountId";
 
-            var mockAccountRequestBody = new Mock<IAccountRequestBody>();
+            var mockAccountRequestBody = new Mock<AccountRequestBody>();
             mockAccountRequestBody.Setup(x => x.AccountId).Returns(mockAccountId);
             _shurlyController.Account(mockAccountRequestBody.Object);
 
             var mockUrl = "http://facebook.com";
-            var mockRegisterRequestBody = new Mock<IRegisterRequestBody>();
+            var mockRegisterRequestBody = new Mock<RegisterRequestBody>();
             mockRegisterRequestBody.Setup(x => x.Url).Returns(mockUrl);
-            _shurlyController.Register(mockAccountId, mockRegisterRequestBody.Object);
+            _shurlyController.Register(mockRegisterRequestBody.Object);
 
             var httpActionResult = _shurlyController.Statistic(mockAccountId);
 

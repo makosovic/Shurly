@@ -32,7 +32,6 @@ namespace Shurly.Core.WebApi.Attributes
                     {
                         IPrincipal currentPrincipal = new GenericPrincipal(new GenericIdentity(accountId), null);
                         Thread.CurrentPrincipal = currentPrincipal;
-                        HttpContext.Current.User = currentPrincipal;
                         return;
                     }
                 }

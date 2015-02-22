@@ -13,7 +13,7 @@ namespace Shurly.Core.Persistance
 {
     public class CacheStore : IAccountStore, IShurlyStore
     {
-        private const int Seed = 125000;
+        private const long Seed = 312500000;
 
         private static readonly ConcurrentDictionary<string, IAccount> AccountCache =
             new ConcurrentDictionary<string, IAccount>();
@@ -127,7 +127,7 @@ namespace Shurly.Core.Persistance
 
         #region private methods
 
-        private int GetNextShurlyId()
+        private long GetNextShurlyId()
         {
             return Seed + ShurlyCache.Count + 1;
         }
