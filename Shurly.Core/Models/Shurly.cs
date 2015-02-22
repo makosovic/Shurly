@@ -46,7 +46,7 @@ namespace Shurly.Core.Models
 
         private string CreateShortUrl(long number, string chars)
         {
-            return ConvertLong.ToCustomBase(number, chars.ToCharArray());
+            return CustomNumberBase.Encode(number, chars.ToCharArray());
         }
     }
 }

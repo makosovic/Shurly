@@ -13,7 +13,7 @@ namespace Shurly.Core.Persistance
 {
     public class CacheStore : IAccountStore, IShurlyStore
     {
-        private const int Seed = 10000;
+        private const int Seed = 125000;
 
         private static readonly ConcurrentDictionary<string, IAccount> AccountCache =
             new ConcurrentDictionary<string, IAccount>();
@@ -44,7 +44,7 @@ namespace Shurly.Core.Persistance
             {
                 return account;
             }
-            throw new ApplicationException(string.Format("Account with Id {0} already exists.", accountId));
+            throw new ApplicationException(string.Format("AccountId '{0}' already exists.", accountId));
         }
 
         #endregion
@@ -116,15 +116,13 @@ namespace Shurly.Core.Persistance
                     }
                     else
                     {
-                        throw new ApplicationException(string.Format("Shurly '{0}' doesnt exist.", shortUrl));
+                        throw new ApplicationException(string.Format("Shurly '{0}' doesn't exist.", shortUrl));
                     }
                 }
 
-                var urlHelper = new UrlHelper();
-
-                return shurlies.ToDictionary(x => x.Url, y => y.Visits);
+                return shurlies.GroupBy(x => x.Url).ToDictionary(x => x.Key, y => y.Sum(z => z.Visits));
             }
-            throw new ApplicationException("Account doesnt exists.");
+            throw new ApplicationException(string.Format("AccountId '{0}' doesn't exists.", accountId));
         }
 
         #region private methods
@@ -148,7 +146,7 @@ namespace Shurly.Core.Persistance
                 urls.Add(shortUrl);
 
                 if (!ShurlyOwnershipCache.TryAdd(accountId, urls))
-                    throw new ApplicationException(string.Format("There is no account with id '{0}'", accountId));
+                    throw new ApplicationException(string.Format("AccountId '{0}' doesn't exists.", accountId));
             }
         }
 

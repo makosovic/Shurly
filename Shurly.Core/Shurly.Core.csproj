@@ -54,10 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\Characters.cs" />
-    <Compile Include="Helpers\ConvertLong.cs" />
+    <Compile Include="Helpers\CustomNumberBase.cs" />
     <Compile Include="Enums\RedirectType.cs" />
-    <Compile Include="WebApi\Models\AccountRequestBody.cs" />
-    <Compile Include="WebApi\Models\RegisterRequestBody.cs" />
+    <Compile Include="WebApi\Attributes\InjectAccountId.cs" />
+    <Compile Include="WebApi\Models\IAccountRequestBody.cs" />
+    <Compile Include="WebApi\Models\IRegisterRequestBody.cs" />
     <Compile Include="WebApi\Models\RegisterResponseBody.cs" />
     <Compile Include="WebApi\Models\AccountResponseBody.cs" />
     <Compile Include="Models\IShurly.cs" />
@@ -77,6 +78,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

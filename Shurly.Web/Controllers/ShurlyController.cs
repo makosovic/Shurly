@@ -15,11 +15,11 @@ namespace Shurly.Web.Controllers
     {
         [HttpPost]
         // POST account
-        public IHttpActionResult Account([FromBody] AccountRequestBody requestBody)
+        public IHttpActionResult Account([FromBody] IAccountRequestBody requestBody)
         {
             if (requestBody == null || string.IsNullOrEmpty(requestBody.AccountId))
             {
-                return Ok(new AccountResponseBody {Success = false, Description = "Parameter AccountId is required."});
+                return BadRequest("Parameter AccountId is required.");
             }
 
             IAccountStore accountStore = new CacheStore();
@@ -44,8 +44,9 @@ namespace Shurly.Web.Controllers
 
         [HttpPost]
         [BasicAuth]
+        [InjectAccountId]
         // POST register
-        public IHttpActionResult Register([FromBody] RegisterRequestBody requestBody)
+        public IHttpActionResult Register(string accountId, [FromBody]IRegisterRequestBody requestBody)
         {
             if (requestBody == null || string.IsNullOrEmpty(requestBody.Url))
             {
@@ -60,11 +61,11 @@ namespace Shurly.Web.Controllers
 
                 if (requestBody.RedirectType == null)
                 {
-                    shurly = shurlyStore.Register(requestBody.Url, User.Identity.Name);
+                    shurly = shurlyStore.Register(requestBody.Url, accountId);
                 }
                 else
                 {
-                    shurly = shurlyStore.Register(requestBody.Url, User.Identity.Name,
+                    shurly = shurlyStore.Register(requestBody.Url, accountId,
                         (RedirectType) requestBody.RedirectType);
                 }
 
