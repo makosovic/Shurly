@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Web.Http;
 using Newtonsoft.Json;
 using Shurly.Core.Enums;
@@ -60,11 +61,11 @@ namespace Shurly.Web.Controllers
 
                 if (requestBody.RedirectType == null)
                 {
-                    shurly = shurlyStore.Register(requestBody.Url, User.Identity.Name);
+                    shurly = shurlyStore.Register(requestBody.Url, Thread.CurrentPrincipal.Identity.Name);
                 }
                 else
                 {
-                    shurly = shurlyStore.Register(requestBody.Url, User.Identity.Name,
+                    shurly = shurlyStore.Register(requestBody.Url, Thread.CurrentPrincipal.Identity.Name,
                         (RedirectType) requestBody.RedirectType);
                 }
 
